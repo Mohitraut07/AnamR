@@ -20,7 +20,7 @@ const useFetch = <T>(fetchFunction: () => Promise<T>, autoFetch=true) => {
             setData(result);
 
         } catch (error) {
-            setError(error as instance of Error ? error : new Error('An unexpected error occurred.'));
+            setError(error instanceof Error ? error : new Error('An unexpected error occurred.'));
         }finally {
 
         }
