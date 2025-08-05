@@ -1,14 +1,15 @@
-import { View, Text, Image, FlatList, ActivityIndicator } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 
-import useFetch from '@/services/useFetch'
 import { fetchMovies } from '@/services/api'
+import useFetch from '@/services/useFetch'
 
 import { icons } from '@/constants/icons'
 import { images } from '@/constants/images'
 
 import MovieCard from '@/components/MovieCard'
 import SearchBar from '@/components/SearchBar'
+import { updateSearchCount } from '@/services/appwrite'
 
 
 const search = () => {
@@ -19,12 +20,15 @@ const search = () => {
     error,
     refetch: refetchMovies,
     reset
-  } = useFetch(() => fetchMovies({ query: searchQuery }, false));
+  } = useFetch(() => fetchMovies({ query: searchQuery }), false);
 
     useEffect(() => {
       const timeoutID = setTimeout(async () => {
         if (searchQuery.trim()) {
           await refetchMovies();
+          if( movies?.length > 0 && movies?.[0]) {
+            await updateSearchCount(searchQuery,movies[0]);
+          }
         } else {
           reset();
         }
