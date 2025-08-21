@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Query } from 'react-native-appwrite';
+import { Client, Databases,Account, ID, Query } from 'react-native-appwrite';
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;
@@ -8,6 +8,9 @@ const client = new Client()
     .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || '');
 
 const database = new Databases(client);    
+
+const account = new Account(client);
+
 // Track the searches made by the user
 export const updateSearchCount = async (query:string, movie: Movie)=> {
 try {
@@ -57,5 +60,16 @@ export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> 
     } catch (error) {
         console.log(error);
         return undefined;
+    }
+}
+
+// Returns true if the user session/ account exists, false otherwise.
+export const userVerification = async(): Promise<boolean>=>{
+    try {
+        const user = await account.get();
+        return !!(user && (user.$id ?? user.$id === 0 ? user.$id : true));
+    } catch (error) {
+        console.log(error);
+        return false;
     }
 }

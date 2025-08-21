@@ -1,8 +1,10 @@
-import { View, Text, ImageBackground, Image } from 'react-native'
-import React from 'react'
-import { Tabs } from 'expo-router'
+import { View, Text, ImageBackground, Image, ActivityIndicator, StatusBar } from 'react-native'
+import React,{useEffect, useState} from 'react'
+import { Tabs, useRouter } from 'expo-router'
 import { images } from '@/constants/images'
 import { icons } from '@/constants/icons'
+import { userVerification } from '@/services/appwrite'
+import Signup from '@/app/signup'
 
 const TabIcon = ({ focused, icon, title }:any) => {
     if(focused){
@@ -10,7 +12,7 @@ const TabIcon = ({ focused, icon, title }:any) => {
             <>
                 <ImageBackground
                     source={images.highlight}
-                    className='flex flex-1 w-full flex-row min-w-[112px] min-h-16  justify-center items-center rounded-full mt-4 overflow-hidden'
+                    className='flex flex-1 w-full flex-row min-w-[112px] min-h-16 justify-center items-center rounded-full mt-4 overflow-hidden'
                 >
                     <Image
                         source={icon}
@@ -33,28 +35,84 @@ const TabIcon = ({ focused, icon, title }:any) => {
 }
 
 const _Layout = () => {
-  return (
-    <Tabs
-        screenOptions={{
-            tabBarShowLabel: false,
-            tabBarItemStyle:{
-                width: '100%',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-            tabBarStyle:{
-                backgroundColor: '#0f0D23',
-                borderRadius: 50,
-                marginHorizontal: 20,
-                marginBottom: 36,
-                height: 52,
-                position: 'absolute',
-                overflow: 'hidden',
-                borderWidth: 1,
-                borderColor: '#0f0D23',
+    const [verified, setVerified] = useState<boolean | null>(null);
+    const router = useRouter();
+
+     useEffect(()=>{
+         let mounted = true;
+         (async () => {
+          const isVerified = await userVerification();
+            if(!mounted) return;
+            setVerified(isVerified);
+            try {
+                const isVerified = await userVerification();
+                if(!mounted) return;
+                setVerified(isVerified);
+            } catch (err) {
+                // treat errors as unauthenticated and navigate to signup
+                console.warn('userVerification failed', err);
+                if(!mounted) return;
+                setVerified(false);
             }
-        }}>
+         })();
+         return () => {
+             mounted = false;
+         }
+     },[]);
+ 
+    // redirect to signup when we know user is NOT verified
+    useEffect(() => {
+      if (verified === false) {
+        // replace so user can't go back to the app without signing in
+        router.replace('/signup');
+      }
+    }, [verified, router]);
+
+     // while checking, show a full-screen loader (prevents UI flash)
+     if(verified === null){
+         return(
+             <View className='flex-1 bg-primary items-center justify-center'>
+                 <ActivityIndicator size='large' color="#fff"/>
+             </View>
+         );
+     }
+ 
+    // not signed in -> show Signup screen (no Tabs)
+    if(!verified){
+        return( 
+        <>
+        <Signup />
+        </>
+    );
+    }
+    // if user is not verified we already navigate to /signup above.
+    // keep returning null here to avoid rendering the app UI while router replaces.
+    if(!verified){
+        return null;
+    }     
+
+        return (
+            <Tabs
+            screenOptions={{
+                tabBarShowLabel: false,
+                tabBarItemStyle:{
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                },
+                tabBarStyle:{
+                    backgroundColor: '#0f0D23',
+                    borderRadius: 50,
+                    marginHorizontal: 20,
+                    marginBottom: 36,
+                    height: 52,
+                    position: 'absolute',
+                    overflow: 'hidden',
+                    borderWidth: 1,
+                    borderColor: '#0f0D23',
+                }
+            }}>
         <Tabs.Screen
             name="index"
             options={{
@@ -67,7 +125,7 @@ const _Layout = () => {
                     title="Home"/>
                 )
             }}
-        />
+            />
         <Tabs.Screen
             name="search"
             options={{
@@ -80,7 +138,7 @@ const _Layout = () => {
                     title="Search"/>
                 )
             }}
-        />
+            />
         <Tabs.Screen
             name="saved"
             options={{
@@ -93,7 +151,7 @@ const _Layout = () => {
                     title="Saved"/>
                 )
             }}
-        />
+            />
         <Tabs.Screen
             name="profile"
             options={{
@@ -106,7 +164,7 @@ const _Layout = () => {
                     title="Profile"/>
                 )
             }}
-        />
+            />
     </Tabs>
   )
 }
