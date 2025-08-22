@@ -73,3 +73,21 @@ export const userVerification = async(): Promise<boolean>=>{
         return false;
     }
 }
+
+export const createUser = async (email: string, password: string, username: string) =>{
+    try {
+        const newAccount = await account.create(ID.unique(), // Let Appwrite generate a unique user ID
+        email, password, username);
+        if(!newAccount) throw new Error('Account creation failed!')
+        
+        // Automatically log in the user after account 
+        const session = await account.createEmailPasswordSession(email, password);
+        return session;
+    } catch (error:any) {
+        console.log(error);
+        // Re-throw the error with a user-friendly message
+        throw new Error(error.message || "Failed to create account. Please try again.")
+        
+        
+    }
+}
