@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useRouter,  } from 'expo-router';
 import { createUser } from '@/services/appwrite';
-import { images } from '@/constants/images';
+import { icons } from '@/constants/icons';
 
 const SignupScreen = () => {
   const [form,setForm] = useState({
@@ -41,9 +41,10 @@ const SignupScreen = () => {
         <View className="w-full justify-center min-h-[90vh] px-6 my-6">
           {/* App Logo */}
           <Image
-            source={images.logo}
+            source={icons.logo}
             resizeMode="contain"
             style={{ width: 130, height: 45 }}
+            className='justify-center'
           />
 
           <Text className="text-2xl text-white font-semibold mt-10">
@@ -53,9 +54,9 @@ const SignupScreen = () => {
           {/* Username Input */}
           <View className="mt-7 space-y-2">
             <Text className="text-base text-light-200 font-medium">Username</Text>
-            <View className="w-full h-16 px-4 bg-dark-100 rounded-2xl border-2 border-dark-200 focus:border-accent flex-row items-center">
+            <View className="w-full h-16 px-4 bg-dark-100 rounded-2xl border-dark-200 focus:border-accent flex-row items-center">
               <TextInput
-                className="flex-1 text-white font-semibold text-base"
+                className="flex-1 text-white font-semibold text-base "
                 value={form.username}
                 placeholder="Your unique username"
                 placeholderTextColor="#9CA4AB" // Corresponds to light-300
