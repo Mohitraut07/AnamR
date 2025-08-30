@@ -9,7 +9,7 @@ const client = new Client()
 
 const database = new Databases(client);    
 
-const account = new Account(client);
+export const account = new Account(client);
 
 // Track the searches made by the user
 export const updateSearchCount = async (query:string, movie: Movie)=> {
@@ -89,5 +89,16 @@ export const createUser = async (email: string, password: string, username: stri
         throw new Error(error.message || "Failed to create account. Please try again.")
         
         
+    }
+}
+
+export const userLogin = async(email: string, password: string): Promise<any | null> =>{
+    try{
+        const promise = await account.createEmailPasswordSession(email, password);
+        if(!promise) throw new Error('Login failed!');
+        return promise;
+    }catch(error: any){
+        console.log(error);
+        throw new Error(error.message || "Login failed. Please try again.")
     }
 }
