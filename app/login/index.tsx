@@ -22,13 +22,13 @@ const LoginScreen = () => {
     }
     setIsSubmitting(true);
     try{
-   try {
-       // Log out any existing session
-       await account.deleteSession('current');
-   } catch (error) {
-       // Ignore errors if no session exists
-       console.log(error);
-   }
+      try {
+          // Log out any existing session
+          await account.deleteSession('current');
+      } catch (error) {
+          // Ignore errors if no session exists
+          console.log(error);
+      }
       // Call your login API here
       const user = await userLogin(form.email, form.password);
       if(user){
@@ -36,7 +36,7 @@ const LoginScreen = () => {
         router.replace('/(tabs)'); // Navigate to home screen after successful login
       }
     }catch(error: any){
-      Alert.alert('Error',error.message);
+      Alert.alert('Error',error.message || 'Login failed. Please try again.');
     }finally{
       setIsSubmitting(false);
     }
