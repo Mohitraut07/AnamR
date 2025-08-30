@@ -1,4 +1,6 @@
 import { Client, Databases,Account, ID, Query } from 'react-native-appwrite';
+import { useRouter } from 'expo-router';
+import { Alert } from 'react-native';
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;
@@ -10,6 +12,8 @@ const client = new Client()
 const database = new Databases(client);    
 
 export const account = new Account(client);
+
+const router = useRouter();
 
 // Track the searches made by the user
 export const updateSearchCount = async (query:string, movie: Movie)=> {
@@ -98,7 +102,37 @@ export const userLogin = async(email: string, password: string): Promise<any | n
         if(!promise) throw new Error('Login failed!');
         return promise;
     }catch(error: any){
+        // Provide a user-friendly error message
+        let message = "Login failed. Please try again.";
+        if(error?.message){
+            // Appwrite errors often have a message property
+            message = error.message;
+        }else if(typeof error === 'string'){
+            message = error;
+        }
+        // Log for debugging
         console.log(error);
-        throw new Error(error.message || "Login failed. Please try again.")
+        // Throw with user-friendly message
+        throw new Error(message);
+    }
+}
+
+export const fetchUserDetails = async (): Promise<any|null>=>{
+    try {
+        const user = await account.get();
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export const handleLogout = async () => {
+    try {
+        await account.deleteSession('current');
+        router.replace('/login');
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
 }
