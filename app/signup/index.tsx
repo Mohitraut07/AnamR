@@ -1,9 +1,9 @@
 // filepath: /Users/MOHIT/Documents/GitHub/react-native-app-movie/app/signup/index.tsx
 import React,{useState} from 'react';
-import { View, TextInput, Text, ScrollView, Alert, Button, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, Text, ScrollView, Alert, TouchableOpacity, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, useRouter,  } from 'expo-router';
+import { Link, useRouter  } from 'expo-router';
 import { createUser } from '@/services/appwrite';
 import { icons } from '@/constants/icons';
 
@@ -112,7 +112,7 @@ const SignupScreen = () => {
             <Text className="text-lg text-light-200">
               Have an account already?
             </Text>
-            <Link href="../sign-in" className="text-lg font-semibold text-accent">
+            <Link href="../login" className="text-lg font-semibold text-accent">
               Sign In
             </Link>
           </View>
