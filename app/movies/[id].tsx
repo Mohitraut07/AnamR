@@ -1,9 +1,11 @@
-import { View, Image, ScrollView,Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { useLocalSearchParams, router } from 'expo-router'
-import useFetch from '@/services/useFetch';
-import { fetchMovieDetails } from '@/services/api';
 import { icons } from '@/constants/icons';
+import { fetchMovieDetails } from '@/services/api';
+import useFetch from '@/services/useFetch';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { saveMovieForUser, fetchUserDetails } from '@/services/appwrite';
+import { Alert } from 'react-native';
 
 interface MovieInfoProps{
   label: string;
@@ -24,6 +26,20 @@ const MovieInfo = ({label, value}: MovieInfoProps) =>(
 const MovieDetails = () => {
   const {id} = useLocalSearchParams();
   const {data: movie, loading} = useFetch(() => fetchMovieDetails(id as string));
+  const [isSaved, setIsSaved] = useState(true);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(()=>{
+    fetchUserDetails().then(setUser);
+  },[]);
+
+  const handleSave = async () => {
+    if(user){
+      await saveMovieForUser(movie,user.$id);
+      setIsSaved(true);
+      Alert.alert('Success', 'Movie saved to your list!');
+    }
+  }
   return (
     <View className='bg-primary flex-1'>
       <ScrollView contentContainerStyle={{ paddingBottom: 80}}>
@@ -38,6 +54,14 @@ const MovieDetails = () => {
           <Text className='text-white font-bold text-xl'>
             {movie?.title}
           </Text>
+          <TouchableOpacity onPress={handleSave} className='absolute top-1 right-5 z-50'>
+            <Image
+              source={isSaved ? icons.save : icons.bookmark}
+              style={{ width: 20, height: 26, padding: 8, borderRadius: 9999}}
+              className='rounded-full transition-all duration-200 ease-in-out'
+              resizeMode='contain'
+            />
+          </TouchableOpacity>
           <View className='flex-row items-center gap-x-1 mt-2 '>
             <Text className='text-light-200 text-sm'>{movie?.release_date?.split('-')[0]}</Text>
             <Text className='text-light-200 text-sm'>{movie?.runtime}m</Text>
@@ -65,4 +89,4 @@ const MovieDetails = () => {
   )
 }
 
-export default MovieDetails
+export default MovieDetails;

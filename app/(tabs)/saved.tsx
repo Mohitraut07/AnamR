@@ -1,19 +1,49 @@
-import { View, Text ,Image } from 'react-native'
-import React from 'react'
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { icons } from '@/constants/icons'
+import { fetchSavedMoviesForUser, fetchUserDetails } from '@/services/appwrite'
 
-const saved = () => {
-  return (
-    <View className='flex-1 bg-primary px-10'>
-      <View className='flex justify-center items-center flex-1 flex-col gap-5'>
-        <Image
-          source={icons.save}
-          className='size-10'
-          tintColor='#fff'/>
-          <Text className="text-base text-gray-500 ">Saved</Text>
+const Saved = () => {
+  const [savedMovies, setSavedMovies] = useState<any[]>([]);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      const userDetails = await fetchUserDetails();
+      setUser(userDetails);
+      if (userDetails) {
+        const movies = await fetchSavedMoviesForUser(userDetails.$id);
+        setSavedMovies(movies);
+      }
+    };
+    load();
+  }, []);
+
+  if (!user) {
+    return (
+      <View className='flex-1 bg-primary justify-center items-center'>
+        <Text className="text-white">Please log in to see your saved movies.</Text>
       </View>
-    </View>
-  )
-}
+    );
+  }
 
-export default saved
+  return (
+    <View className='flex-1 bg-primary px-4 pt-8'>
+      <Text className="text-2xl text-white font-bold mb-4">Your Saved Movies</Text>
+      <ScrollView>
+        {savedMovies.length === 0 ? (
+          <Text className="text-light-200">No saved movies yet.</Text>
+        ) : (
+          savedMovies.map(movie => (
+            <View key={movie.$id} className="flex-row items-center mb-4 bg-dark-100 rounded-xl p-3">
+              <Image source={{ uri: movie.poster_url }} style={{ width: 60, height: 90, borderRadius: 8 }} />
+              <Text className="text-white ml-4 text-lg font-semibold">{movie.title}</Text>
+            </View>
+          ))
+        )}
+      </ScrollView>
+    </View>
+  );
+};
+
+export default Saved;

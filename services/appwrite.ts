@@ -4,6 +4,8 @@ import { Alert } from 'react-native';
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;
+const SAVED_DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_SAVED_MOVIES_DATABASE_ID!;
+const SAVED_COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_SAVED_MOVIES_COLLECTION_ID!;
 
 const client = new Client()
     .setEndpoint(process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || '')
@@ -136,3 +138,39 @@ export const handleLogout = async () => {
         throw error;
     }
 }
+
+export const saveMovieForUser = async (movie: any, userId: string) =>{
+    try {
+        await database.createDocument(
+            SAVED_DATABASE_ID,
+            SAVED_COLLECTION_ID,
+            ID.unique(),
+            {
+                user_id: userId,
+                movie_id: movie.id,
+                title: movie.title,
+                poster_url: 'https://image.tmdb.org/t/p/w500' + movie.poster_path,
+                release_date: movie.release_date,
+                // add more fields as needed
+            }
+        );
+    } catch (error) {
+        console.log(error);
+        throw error;  
+    }
+}
+
+// Fetch saved movies for the current user
+export const fetchSavedMoviesForUser = async (userId: string) => {
+  try {
+    const result = await database.listDocuments(
+        SAVED_DATABASE_ID,
+        SAVED_COLLECTION_ID,
+      [Query.equal('user_id', userId)]
+    );
+    return result.documents;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
