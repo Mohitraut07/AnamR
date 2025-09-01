@@ -141,19 +141,35 @@ export const handleLogout = async () => {
 
 export const saveMovieForUser = async (movie: any, userId: string) =>{
     try {
-        await database.createDocument(
-            SAVED_DATABASE_ID,
+        // Check if this movie is already saved by this user
+        const existing = await database.listDocuments(
+            SAVED_DATABASE_ID, // Use your main database ID
             SAVED_COLLECTION_ID,
-            ID.unique(),
-            {
-                user_id: userId,
-                movie_id: movie.id,
-                title: movie.title,
-                poster_url: 'https://image.tmdb.org/t/p/w500' + movie.poster_path,
-                release_date: movie.release_date,
-                // add more fields as needed
-            }
+            [
+                Query.equal('user_id', userId),
+                Query.equal('movie_id',movie.id)
+            ]
         );
+        if(existing.documents.length > 0){
+            // Already saved, do nothing or throw an error if you want
+            Alert.alert('Info', 'Movie is already in your saved list.');
+        }else{
+
+            // If not already saved, create a new record
+            await database.createDocument(
+                SAVED_DATABASE_ID,
+                SAVED_COLLECTION_ID,
+                ID.unique(),
+                {
+                    user_id: userId,
+                    movie_id: movie.id,
+                    title: movie.title,
+                    poster_url: 'https://image.tmdb.org/t/p/w500' + movie.poster_path,
+                    release_date: movie.release_date,
+                    // add more fields as needed
+                }
+            );
+        }
     } catch (error) {
         console.log(error);
         throw error;  

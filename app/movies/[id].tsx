@@ -81,7 +81,7 @@ const MovieDetails = () => {
         </View>
       </ScrollView>
       <TouchableOpacity className='absolute bottom-5 left-0 right-0 mx-5 py-3.5 flex-row items-center justify-center bg-accent rounded-lg z-50'
-      onPress={router.back}>
+      onPress={() => router.replace('/')}>
         <Image source={icons.arrow} className='size-5 mr-1 mt-0.5 rotate-180 ' tintColor='#fff'/>
         <Text className='text-white font-bold text-base'>Go Back</Text>
       </TouchableOpacity>
