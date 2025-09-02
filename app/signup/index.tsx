@@ -61,6 +61,10 @@ const SignupScreen = () => {
                 placeholder="Your unique username"
                 placeholderTextColor="#9CA4AB" // Corresponds to light-300
                 onChangeText={(e) => setForm({ ...form, username: e })}
+                style={{
+                  borderWidth: 0,
+                  outline: 'none',
+                }}
               />
             </View>
           </View>
@@ -76,6 +80,10 @@ const SignupScreen = () => {
                 placeholderTextColor="#9CA4AB"
                 onChangeText={(e) => setForm({ ...form, email: e })}
                 keyboardType="email-address"
+                style={{
+                  borderWidth: 0,
+                  outline: 'none',
+                }}
               />
             </View>
           </View>
@@ -91,6 +99,10 @@ const SignupScreen = () => {
                 placeholderTextColor="#9CA4AB"
                 onChangeText={(e) => setForm({ ...form, password: e })}
                 secureTextEntry
+                style={{
+                  borderWidth: 0,
+                  outline: 'none',
+                }}
               />
             </View>
           </View>

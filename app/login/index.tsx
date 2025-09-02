@@ -64,7 +64,12 @@ const LoginScreen = () => {
             placeholder='Your email address'
             placeholderTextColor="#9CA4AB"
             onChangeText={(e) => setForm({...form, email:e})}
-            keyboardType='email-address'/>
+            keyboardType='email-address'
+            style={{
+              borderWidth: 0,
+              outline: 'none',
+            }}
+          />
             </View>
         </View>
 
@@ -79,6 +84,10 @@ const LoginScreen = () => {
                         placeholderTextColor="#9CA4AB"
                         onChangeText={(e) => setForm({ ...form, password: e })}
                         secureTextEntry
+                        style={{
+                          borderWidth: 0,
+                          outline: 'none',
+                        }}
                       />
                     </View>
                   </View>
