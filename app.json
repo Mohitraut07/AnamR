@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AnamR",
-    "slug": "movie-app",
+    "slug": "anamr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.master_03.anamr"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4d1dfe72-fe73-4ec3-ac8b-cca89d1056c2"
+      }
+    },
+    "owner": "master_03"
   }
 }
