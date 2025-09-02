@@ -1,99 +1,153 @@
-
 # 🎬 Movie App (React Native + Expo)
 
-This is a cross-platform Movie App built with [Expo](https://expo.dev) and React Native. Search for movies, view details, and save your favorites. Powered by The Movie Database (TMDB) API.
+A cross-platform Movie App built with [Expo](https://expo.dev) and React Native. Search for movies, view details, and save your favorites. Powered by The Movie Database (TMDB) API and Appwrite for authentication and data storage.
+
+
+
+## 🚀 Quick Access
+
+- **Live Project:**  
+  [Open in Expo](https://expo.dev/accounts/master_03/projects/anamr/builds/f45c80db-39f0-4040-a28a-42b904c1033d)
+
+- **QR Code:**  
+  ![QR Code for Project](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://expo.dev/accounts/master_03/projects/anamr/builds/f45c80db-39f0-4040-a28a-42b904c1033d)
+
+
 
 ## ✨ Features
 
-- 🔍 Search for movies in real-time
-- 🎬 View trending and popular movies
-- 💾 Save your favorite movies
-- 🧑 User profile and saved movies tab
-- ⚡ Fast, responsive UI with Tailwind CSS (NativeWind)
-
----
-
-
-## 🚀 Getting Started
+- 🔍 Real-time movie search
+- 🎬 Trending and popular movies
+- 💾 Save favorite movies (per user)
+- 👤 User authentication (signup/login)
+- 🧑 Profile and saved movies tab
+- ⚡ Responsive UI with Tailwind CSS (NativeWind)
+- 🌙 Dark theme
 
 
-1. **Install dependencies**
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Getting Started
 
-2. **Set up environment variables**
+### 1. **Clone the Repository**
 
-   - Copy your TMDB API key to a `.env` file or set it in your environment as `EXPO_PUBLIC_MOVIE_API_KEY`.
-   - Example `.env`:
-     ```env
-     EXPO_PUBLIC_MOVIE_API_KEY=your_tmdb_api_key_here
-     ```
+```bash
+git clone https://github.com/master_03/react-native-app-movie.git
+cd react-native-app-movie
+```
 
-3. **Start the app**
+### 2. **Install Dependencies**
 
-   ```bash
-   npx expo start
-   ```
+```bash
+npm install
+```
 
-In the output, you'll find options to open the app in a
+### 3. **Set Up Environment Variables**
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Create a `.env` file in the project root:
+
+```env
+EXPO_PUBLIC_MOVIE_API_KEY=your_tmdb_api_key_here
+EXPO_PUBLIC_APPWRITE_PROJECT_ID=your_appwrite_project_id
+EXPO_PUBLIC_APPWRITE_DATABASE_ID=your_appwrite_database_id
+EXPO_PUBLIC_APPWRITE_COLLECTION_ID=your_main_collection_id
+EXPO_PUBLIC_APPWRITE_ENDPOINT=https://fra.cloud.appwrite.io/v1
+EXPO_PUBLIC_APPWRITE_SAVED_MOVIES_DATABASE_ID=your_appwrite_database_id
+EXPO_PUBLIC_APPWRITE_SAVED_MOVIES_COLLECTION_ID=your_saved_movies_collection_id
+```
+
+**Descriptions:**
+- `EXPO_PUBLIC_MOVIE_API_KEY`: TMDB API key for movie data.
+- `EXPO_PUBLIC_APPWRITE_PROJECT_ID`: Appwrite project ID.
+- `EXPO_PUBLIC_APPWRITE_DATABASE_ID`: Appwrite database ID.
+- `EXPO_PUBLIC_APPWRITE_COLLECTION_ID`: Main collection for movies/searches.
+- `EXPO_PUBLIC_APPWRITE_ENDPOINT`: Appwrite API endpoint.
+- `EXPO_PUBLIC_APPWRITE_SAVED_MOVIES_DATABASE_ID`: Database ID for saved movies (usually same as main DB).
+- `EXPO_PUBLIC_APPWRITE_SAVED_MOVIES_COLLECTION_ID`: Collection ID for saved movies (e.g., `bookmarks`).
+
+### 4. **Start the App**
+
+```bash
+npx expo start
+```
+
+You can run the app on:
+- [Expo Go](https://expo.dev/go)
+- Android emulator
+<!-- - iOS simulator -->
+<!-- - Web browser -->
 
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
----
-
-## 📁 Folder Structure
+## 📁 Project Structure
 
 ```
 app/
-   (tabs)/         # Tab screens (Home, Search, Saved, Profile)
-   movies/         # Movie details screens
-   globals.css     # Global styles
-components/       # Reusable UI components
-constants/        # Static assets (icons, images)
-interfaces/       # TypeScript interfaces
-services/         # API and data fetching logic
-types/            # Type definitions
-assets/           # Fonts, images, icons
+  (tabs)/                # Tab screens: Home, Search, Saved, Profile
+    _layout.tsx          # Tab navigator layout and logic
+    index.tsx            # Home tab
+    search.tsx           # Search tab
+    saved.tsx            # Saved tab (shows user's saved movies)
+    profile.tsx          # Profile tab (user info)
+  movies/                # Movie details screens (dynamic route)
+    [id].tsx             # Movie details by ID
+  signup/                # Signup page and layout
+  login/                 # Login page and layout
+  globals.css            # Global styles for NativeWind
+components/              # Reusable UI components (MovieCard, SearchBar, etc.)
+constants/               # Static assets (icons, images)
+interfaces/              # TypeScript interfaces for props/data
+services/                # API and Appwrite logic (api.ts, appwrite.ts, useFetch.ts)
+types/                   # Type definitions (e.g., images.d.ts)
+assets/                  # Fonts, images, icons
 ```
 
----
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 
-## 📚 Learn More
+## 📄 Key Files
 
-To learn more about developing your project with Expo, look at the following resources:
+- **app/(tabs)/_layout.tsx**: Tab navigation and authentication logic.
+- **app/(tabs)/saved.tsx**: Displays movies saved by the logged-in user.
+- **app/movies/[id].tsx**: Movie details and save/bookmark functionality.
+- **services/appwrite.ts**: Appwrite integration for authentication and data.
+- **services/api.ts**: TMDB API integration.
+- **components/**: UI components for cards, lists, etc.
+- **constants/icons.ts & images.ts**: App icons and images.
+- **types/images.d.ts**: TypeScript support for image imports.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
 
-## 🤝 Contributing
+## 🧑‍💻 Development & Customization
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+- Edit files in the `app/` directory for screens and routing.
+- Use `components/` for reusable UI.
+- Update `services/` for API and backend logic.
+- Customize styles in `globals.css` and Tailwind config.
+
+
+
+## 📝 Contributing
+
+Pull requests are welcome!  
+For major changes, please open an issue first to discuss what you would like to change.
+
+
+
+## 📚 Resources
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [Appwrite Documentation](https://appwrite.io/docs)
+- [TMDB API Docs](https://developers.themoviedb.org/3)
+- [NativeWind (Tailwind for React Native)](https://www.nativewind.dev/)
+
+
 
 ## 📝 License
 
-This project is licensed under the MIT License.
+MIT License
 
-Join our community of developers creating universal apps.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+Enjoy building and exploring movies!  
+For questions or feedback, open an issue or join the [Expo Discord](https://chat.expo.dev)
+
+Copyright © 2025 Mohit Raut
