@@ -2,10 +2,12 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { icons } from '@/constants/icons'
 import { fetchSavedMoviesForUser, fetchUserDetails } from '@/services/appwrite'
+import { useRouter } from 'expo-router'
 
 const Saved = () => {
   const [savedMovies, setSavedMovies] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const load = async () => {
@@ -35,10 +37,12 @@ const Saved = () => {
           <Text className="text-light-200">No saved movies yet.</Text>
         ) : (
           savedMovies.map(movie => (
-            <View key={movie.$id} className="flex-row items-center mb-4 bg-dark-100 rounded-xl p-3">
-              <Image source={{ uri: movie.poster_url }} style={{ width: 60, height: 90, borderRadius: 8 }} />
-              <Text className="text-white ml-4 text-lg font-semibold">{movie.title}</Text>
-            </View>
+            <TouchableOpacity key={movie.$id} onPress={() => router.push(`/movies/${movie.movie_id}`)}>
+              <View className="flex-row items-center mb-4 bg-dark-100 rounded-xl p-3">
+                <Image source={{ uri: movie.poster_url }} style={{ width: 60, height: 90, borderRadius: 8 }} />
+                <Text className="text-white ml-4 text-lg font-semibold">{movie.title}</Text>
+              </View>
+            </TouchableOpacity> 
           ))
         )}
       </ScrollView>
