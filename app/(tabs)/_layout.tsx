@@ -12,12 +12,16 @@ const TabIcon = ({ focused, icon, title }:any) => {
             <>
                 <ImageBackground
                     source={images.highlight}
-                    className='flex flex-1 w-full flex-row min-w-[112px] min-h-12 justify-center items-center rounded-full mt-1 overflow-hidden'
+                    className='flex-row justify-center items-center rounded-full px-4 py-2 mt-1 mx-4 overflow-hidden'
+                    style={{
+                        minWidth: 80,
+                        minHeight: 40,
+                    }}
                 >
                     <Image
                         source={icon}
                         tintColor="#151312"
-                        className='size-5'
+                        style={{width: 20, height: 20}}
                     />
                     <Text className='text-secondary text-base font-semibold ml-2'>{title}</Text>
                 </ImageBackground>
@@ -122,7 +126,12 @@ const _Layout = () => {
                     <TabIcon  
                     focused={focused} 
                     icon={icons.home}
-                    title="Home"/>
+                    title="Home"
+                    style={{
+                        width: 80,
+                        height: 40,
+                    }}
+                    />
                 )
             }}
             />
@@ -161,10 +170,15 @@ const _Layout = () => {
                     <TabIcon  
                     focused={focused} 
                     icon={icons.person}
-                    title="Profile"/>
-                )
-            }}
-            />
+                    title="Profile"
+                    style={{
+                        width: 80,
+                        height: 40,
+                    }}
+                />
+            )
+        }}
+        />
     </Tabs>
   )
 }
