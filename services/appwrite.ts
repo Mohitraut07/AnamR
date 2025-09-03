@@ -18,7 +18,7 @@ export const account = new Account(client);
 const router = useRouter();
 
 // Track the searches made by the user
-export const updateSearchCount = async (query:string, movie: Movie)=> {
+export const updateSearchCount = async (query:string, movie: Movie): Promise<void|never> => {
 try {
         const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID,[
             Query.equal('searchTerm', query)
@@ -70,7 +70,7 @@ export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> 
 }
 
 // Returns true if the user session/ account exists, false otherwise.
-export const userVerification = async(): Promise<boolean>=>{
+export const userVerification = async(): Promise<boolean|never>=>{
     try {
         const user = await account.get();
         return !!(user && (user.$id ?? user.$id === 0 ? user.$id : true));
@@ -80,7 +80,7 @@ export const userVerification = async(): Promise<boolean>=>{
     }
 }
 
-export const createUser = async (email: string, password: string, username: string) =>{
+export const createUser = async (email: string, password: string, username: string): Promise<any | never> =>{
     try {
         const newAccount = await account.create(ID.unique(), // Let Appwrite generate a unique user ID
         email, password, username);
@@ -129,7 +129,7 @@ export const fetchUserDetails = async (): Promise<any|null>=>{
     }
 }
 
-export const handleLogout = async () => {
+export const handleLogout = async (): Promise<void|never> => {
     try {
         await account.deleteSession('current');
         router.replace('/login');
@@ -139,7 +139,7 @@ export const handleLogout = async () => {
     }
 }
 
-export const saveMovieForUser = async (movie: any, userId: string) =>{
+export const saveMovieForUser = async (movie: any, userId: string): Promise<void|never> =>{
     try {
         // Check if this movie is already saved by this user
         const existing = await database.listDocuments(
@@ -177,7 +177,7 @@ export const saveMovieForUser = async (movie: any, userId: string) =>{
 }
 
 // Fetch saved movies for the current user
-export const fetchSavedMoviesForUser = async (userId: string) => {
+export const fetchSavedMoviesForUser = async (userId: string): Promise<any[] | never> => {
   try {
     const result = await database.listDocuments(
         SAVED_DATABASE_ID,
