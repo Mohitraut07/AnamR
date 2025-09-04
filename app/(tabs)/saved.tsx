@@ -30,9 +30,9 @@ const Saved = () => {
   }
 
   return (
-    <View className='flex-1 bg-primary px-4 pt-8'>
-      <Text className="text-2xl text-white font-bold mb-4">Your Saved Movies</Text>
-      <ScrollView>
+    <View className='flex-1 bg-primary px-4'>
+      <Text className="text-2xl text-white font-bold mb-4 mt-10">Your Saved Movies</Text>
+      <ScrollView className='flex-1 mt-4'>
         {savedMovies.length === 0 ? (
           <Text className="text-light-200">No saved movies yet.</Text>
         ) : (

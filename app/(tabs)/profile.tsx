@@ -16,7 +16,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <View className="flex-1 bg-primary px-6 py-10">
+    <View className="flex-1 bg-primary px-6 py-10 pt-12">
       {/* Profile Card */}
       <View className="bg-dark-100 rounded-3xl shadow-lg p-6 items-center">
         <View className="w-full h-2 bg-accent rounded-full mb-6" />
