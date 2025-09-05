@@ -1,11 +1,10 @@
 import { icons } from '@/constants/icons';
 import { fetchMovieDetails } from '@/services/api';
+import { fetchUserDetails, saveMovieForUser } from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { saveMovieForUser, fetchUserDetails } from '@/services/appwrite';
-import { Alert } from 'react-native';
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 interface MovieInfoProps{
   label: string;
@@ -26,20 +25,31 @@ const MovieInfo = ({label, value}: MovieInfoProps) =>(
 const MovieDetails = () => {
   const {id} = useLocalSearchParams();
   const {data: movie, loading} = useFetch(() => fetchMovieDetails(id as string));
-  const [isSaved, setIsSaved] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
   const [user, setUser] = useState<any>(null);
 
-  useEffect(()=>{
-    fetchUserDetails().then(setUser);
-  },[]);
+  useEffect(() => {
+    const checkSaved = async () => {
+      const userDetails = await fetchUserDetails();
+      setUser(userDetails);
+      if (userDetails && movie?.id) {
+        // fetchSavedMoviesForUser returns all saved movies for this user
+        const { fetchSavedMoviesForUser } = await import('@/services/appwrite');
+        const savedMovies = await fetchSavedMoviesForUser(userDetails.$id);
+        const alreadySaved = savedMovies.some((m: any) => m.movie_id == movie.id);
+        setIsSaved(alreadySaved);
+      }
+    };
+    checkSaved();
+  }, [movie?.id]);
 
   const handleSave = async () => {
-    if(user){
-      await saveMovieForUser(movie,user.$id);
+    if (user && !isSaved) {
+      await saveMovieForUser(movie, user.$id);
       setIsSaved(true);
       Alert.alert('Success', 'Movie saved to your list!');
     }
-  }
+  };
   return (
     <View className='bg-primary flex-1'>
       <ScrollView contentContainerStyle={{ paddingBottom: 80}}>
@@ -56,7 +66,7 @@ const MovieDetails = () => {
           </Text>
           <TouchableOpacity onPress={handleSave} className='absolute top-1 right-5 z-50'>
             <Image
-              source={isSaved ? icons.save : icons.bookmark}
+              source={isSaved ? icons.bookmark : icons.save}
               style={{ width: 20, height: 26, padding: 8, borderRadius: 9999}}
               className='rounded-full transition-all duration-200 ease-in-out'
               resizeMode='contain'
